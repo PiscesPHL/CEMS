@@ -131,6 +131,8 @@ class StudentController extends Controller
         // Permanently erase them
         $student->forceDelete();
 
-        return redirect()->route('students.trashed')->with('success', 'Student permanently deleted.');
+        return redirect()
+            ->route('students.trashed')
+            ->with('success', 'Student permanently deleted.');
     }
 }

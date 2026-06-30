@@ -52,6 +52,21 @@
                                 <p>Manage Students</p>
                             </a>
                         </li>
+                        @can('manage-students')
+                        <li class="nav-item">
+                            <a href="{{ route('students.create') }}" class="nav-link {{ Route::is('students.create') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Add Student Info</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{{ route('students.trashed') }}" class="nav-link {{ Route::is('students.trashed') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Deleted Students</p>
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="nav-item">

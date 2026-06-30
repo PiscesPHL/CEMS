@@ -44,7 +44,7 @@
                             <td>{{ $student->deleted_at->format('M d, Y h:i A') }}</td>
                             
                             <td class="d-flex gap-2">
-                                <form action="{{ route('students.restore', $student->id) }}" method="POST">
+                                <form method="POST" action="{{ route('students.restore', $student->id) }}">
                                     @csrf   
                                     @method('PATCH')
                                     <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to restore this student?')">
@@ -52,10 +52,10 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('students.forceDelete', $student->id) }}" method="POST">
+                                <form method="POST" action="{{ route('students.forceDelete', $student->id) }}">
                                     @csrf   
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Permanently delete this student? This cannot be undone!')">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('This cannot be undone. Continue?')">
                                         <i class="bi bi-trash"></i> Permadelete
                                     </button>
                                 </form>

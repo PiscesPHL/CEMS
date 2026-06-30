@@ -3,7 +3,7 @@
 <div class="col-md-6">
     @if(session('success'))
     <div class="alert alert-success" role="alert">
-          {{ session('success') }}            
+          {{ session('success') }}          
     </div>
     @endif
 
@@ -53,7 +53,13 @@
 
                 <div class="mb-3">
                     <label for="course" class="form-label">Course</label>
-                    <input type="text" name="course" class="form-control @error('course') is-invalid @enderror" id="course" value="{{ old('course', $student->course) }}" />
+                    <select name="course" class="form-control @error('course') is-invalid @enderror" id="course">
+                        <option value="" disabled>Select a Course</option>
+                        <option value="BSIT" {{ old('course', $student->course) == 'BSIT' ? 'selected' : '' }}>BSIT - Bachelor of Science in Information Technology</option>
+                        <option value="BSCS" {{ old('course', $student->course) == 'BSCS' ? 'selected' : '' }}>BSCS - Bachelor of Science in Computer Science</option>
+                        <option value="BSIS" {{ old('course', $student->course) == 'BSIS' ? 'selected' : '' }}>BSIS - Bachelor of Science in Information Systems</option>
+                        <option value="BSEMC" {{ old('course', $student->course) == 'BSEMC' ? 'selected' : '' }}>BSEMC - Bachelor of Science in Entertainment and Multimedia Computing</option>
+                    </select>
                     @error('course')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -63,7 +69,14 @@
 
                 <div class="mb-3">
                     <label for="year_level" class="form-label">Year Level</label>
-                    <input type="text" name="year_level" class="form-control @error('year_level') is-invalid @enderror" id="year_level" value="{{ old('year_level', $student->year_level) }}" />
+                    <select name="year_level" class="form-control @error('year_level') is-invalid @enderror" id="year_level">
+                        <option value="" disabled>Select Year Level</option>
+                        <option value="1st Year" {{ old('year_level', $student->year_level) == '1st Year' ? 'selected' : '' }}>1st Year</option>
+                        <option value="2nd Year" {{ old('year_level', $student->year_level) == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
+                        <option value="3rd Year" {{ old('year_level', $student->year_level) == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
+                        <option value="4th Year" {{ old('year_level', $student->year_level) == '4th Year' ? 'selected' : '' }}>4th Year</option>
+                        <option value="Irregular" {{ old('year_level', $student->year_level) == 'Irregular' ? 'selected' : '' }}>Irregular</option>
+                    </select>
                     @error('year_level')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
