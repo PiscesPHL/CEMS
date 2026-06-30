@@ -105,4 +105,32 @@ class StudentController extends Controller
 
         return view('students.trashed', compact('students', 'search'));
     }
+
+    public function restore(int $id) // <-- Added 'int' here
+    {
+        // Find the deleted record using onlyTrashed()
+        $student = Student::onlyTrashed()->findOrFail($id);
+
+        // Restore the record
+        $student->restore();
+
+        // Redirect back to the trash page with a success message
+        return redirect()
+            ->route('students.trashed')
+            ->with('success', 'Student restored successfully.');
+    }
+
+    /**
+     * Permanently delete a student from the database.
+     */
+    public function forceDelete(int $id) // <-- Added 'int' here
+    {
+        // Find the student in the trash
+        $student = Student::withTrashed()->findOrFail($id);
+        
+        // Permanently erase them
+        $student->forceDelete();
+
+        return redirect()->route('students.trashed')->with('success', 'Student permanently deleted.');
+    }
 }

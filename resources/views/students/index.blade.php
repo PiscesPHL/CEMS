@@ -9,8 +9,13 @@
         @endif
 
         @can('manage-students')
-        <div class="d-flex justify-end mb-3">
-            <a href="{{ url('students/create') }}" class="btn btn-outline-primary btn-sm">Add New Student</a>
+        <div class="d-flex justify-content-end gap-2 mb-3">
+            <a href="{{ route('students.trashed') }}" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-trash"></i> View Trash
+            </a>
+            <a href="{{ url('students/create') }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-plus"></i> Add New Student
+            </a>
         </div>
         @endcan
 
