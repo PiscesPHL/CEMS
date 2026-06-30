@@ -7,9 +7,14 @@
               {{ session('success') }}            
         </div>
         @endif
+
+        <!-- 1. HIDE THE ADD BUTTON FROM NON-ADMINS -->
+        @if(strtolower(auth()->user()->role) === 'admin')
         <div class="d-flex justify-end mb-3">
             <a href="{{ url('students/create') }}" class="btn btn-outline-primary btn-sm">Add New Student</a>
         </div>
+        @endif
+
         <div class="card mb-4">
             <div class="card-body p-0">
                 <table class="table">
@@ -21,7 +26,11 @@
                             <th>Last Name</th>
                             <th>Course</th>
                             <th>Year Level</th>
-                            <th>Action</th>
+                            
+                            <!-- Hide the Action column header if not an admin -->
+                            @if(strtolower(auth()->user()->role) === 'admin')
+                                <th>Action</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -34,6 +43,8 @@
                             <td>{{ $student->course }}</td>
                             <td>{{ $student->year_level }}</td>
                             
+                            <!-- 2. HIDE THE EDIT/DELETE BUTTONS FROM NON-ADMINS -->
+                            @if(strtolower(auth()->user()->role) === 'admin')
                             <td class="d-flex gap-2">
                                 <a href="{{ url('students', $student->id) }}/edit" class="btn btn-success btn-sm">Edit</a>
                                 <form action="{{ url('students', $student->id) }}" method="POST">
@@ -42,6 +53,8 @@
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
                                 </form>
                             </td>
+                            @endif
+                            
                         </tr>
                         @endforeach
                     </tbody>
