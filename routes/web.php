@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentController;   
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -47,18 +47,17 @@ Route::middleware(['auth'])->group(function () {
 // 4. Bootcamp Routes: Authorized Users Only (Using Gate)
 // -----------------------------------------------------
 Route::middleware(['auth', 'can:manage-students'])->group(function () {
-    Route::get('/students/create', [StudentController::class, 'create'])
-        ->name('students.create');
-        
-    Route::post('/students', [StudentController::class, 'store'])
-        ->name('students.store');
-        
-    Route::get('/students/{student}/edit', [StudentController::class, 'edit'])
-        ->name('students.edit');
-        
-    Route::put('/students/{student}', [StudentController::class, 'update'])
-        ->name('students.update');
-        
-    Route::delete('/students/{student}', [StudentController::class, 'destroy'])
-        ->name('students.destroy');
+    
+    // Original CRUD routes
+    Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+    Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+    Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+    Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    
+    // --- NEW TRASH ROUTES FROM SLIDE ---
+    Route::get('/students-trash', [StudentController::class, 'trashed'])->name('students.trashed');
+    Route::patch('/students/{id}/restore', [StudentController::class, 'restore'])->name('students.restore');
+    Route::delete('/students/{id}/force-delete', [StudentController::class, 'forceDelete'])->name('students.forceDelete');
+    
 });

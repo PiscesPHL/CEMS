@@ -89,4 +89,20 @@ class StudentController extends Controller
         // Redirect back to the table with a success message
         return redirect('students')->with('success', 'Student deleted successfully.');
     }
+
+    public function trashed(Request $request)
+    {
+        $search = $request->search;
+
+        $students = Student::onlyTrashed()
+            ->when($search, function ($query, $search) {
+                $query->where('student_number', 'like', "%{$search}%")
+                      ->orWhere('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%");
+            })
+            ->latest('deleted_at')
+            ->paginate(10);
+
+        return view('students.trashed', compact('students', 'search'));
+    }
 }
