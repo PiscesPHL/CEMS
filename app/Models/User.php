@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -32,7 +33,6 @@ class User extends Authenticatable
 
     public function getMemberSinceAttribute()
     {
-        // Fixed typo: create_at -> created_at
         $created_at = $this->created_at; 
         return Carbon::parse($created_at)->format('M Y');
     }
@@ -64,5 +64,17 @@ class User extends Authenticatable
         }
         
         return '';
+    }
+
+    // --- NEW HELPER METHODS ---
+
+    public function isAdmin(): bool
+    {
+        return strtolower($this->role) === 'admin';
+    }
+
+    public function isUser(): bool
+    {
+        return strtolower($this->role) === 'user';
     }
 }

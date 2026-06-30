@@ -8,7 +8,8 @@
             <div class="card-body">
                 <h1>I am logged in as {{ auth()->user()->name }}</h1>
                 
-                @if(strtolower(auth()->user()->role) === 'admin')
+                <!-- Cleaner check applied here -->
+                @if(auth()->user()->isAdmin())
                     <p>I can manage students and users.</p>
                 @else
                     <p>I can view allowed pages only.</p>

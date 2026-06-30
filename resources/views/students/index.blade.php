@@ -8,8 +8,8 @@
         </div>
         @endif
 
-        <!-- 1. HIDE THE ADD BUTTON FROM NON-ADMINS -->
-        @if(strtolower(auth()->user()->role) === 'admin')
+        <!-- Much cleaner Blade check! -->
+        @if(auth()->user()->isAdmin())
         <div class="d-flex justify-end mb-3">
             <a href="{{ url('students/create') }}" class="btn btn-outline-primary btn-sm">Add New Student</a>
         </div>
@@ -27,8 +27,7 @@
                             <th>Course</th>
                             <th>Year Level</th>
                             
-                            <!-- Hide the Action column header if not an admin -->
-                            @if(strtolower(auth()->user()->role) === 'admin')
+                            @if(auth()->user()->isAdmin())
                                 <th>Action</th>
                             @endif
                         </tr>
@@ -43,8 +42,8 @@
                             <td>{{ $student->course }}</td>
                             <td>{{ $student->year_level }}</td>
                             
-                            <!-- 2. HIDE THE EDIT/DELETE BUTTONS FROM NON-ADMINS -->
-                            @if(strtolower(auth()->user()->role) === 'admin')
+                            <!-- Cleaner check here too! -->
+                            @if(auth()->user()->isAdmin())
                             <td class="d-flex gap-2">
                                 <a href="{{ url('students', $student->id) }}/edit" class="btn btn-success btn-sm">Edit</a>
                                 <form action="{{ url('students', $student->id) }}" method="POST">
