@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
@@ -32,20 +33,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the form data
-        $request->validate([
-            'student_number' => 'required|string|max:255|unique:students,student_number',
-            'first_name'     => 'required|string|max:255',
-            'last_name'      => 'required|string|max:255',
-            'course'         => 'required|string|max:255',
-            'year_level'     => 'required|string|max:255',
+        $validated = $request->validate([
+            'student_number' => 'required|unique:students,student_number',
+            'email' => 'required|email|unique:students,email',
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
+            'course' => 'required',
+            'year_level' => 'required',
         ]);
 
-        // 2. Save to database
-        Student::create($request->all());
+        Student::create($validated);
 
-        // 3. Redirect back to the table with a success message
-        return redirect('students')->with('success', 'Student added successfully.');
+        return redirect()->route('students.index')
+            ->with('success', 'Student added successfully.');
     }
 
     /**
@@ -62,20 +62,26 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        // 1. Validate the form data (ignoring the current student's number for the unique check)
-        $request->validate([
-            'student_number' => 'required|string|max:255|unique:students,student_number,' . $student->id,
-            'first_name'     => 'required|string|max:255',
-            'last_name'      => 'required|string|max:255',
-            'course'         => 'required|string|max:255',
-            'year_level'     => 'required|string|max:255',
+        $validated = $request->validate([
+            'student_number' => [
+                'required', 
+                Rule::unique('students')->ignore($student->id)
+            ],
+            'email' => [
+                'required', 
+                'email', 
+                Rule::unique('students')->ignore($student->id)
+            ],
+            'first_name' => 'required|min:2',
+            'last_name' => 'required|min:2',
+            'course' => 'required',
+            'year_level' => 'required',
         ]);
 
-        // 2. Update the database record
-        $student->update($request->all());
+        $student->update($validated);
 
-        // 3. Redirect back to the table with a success message
-        return redirect('students')->with('success', 'Student updated successfully.');
+        return redirect()->route('students.index')
+            ->with('success', 'Student updated.');
     }
 
     /**

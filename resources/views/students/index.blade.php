@@ -28,6 +28,7 @@
                             <th>Student Number</th>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>Email Address</th>
                             <th>Course</th>
                             <th>Year Level</th>
                             
@@ -43,6 +44,7 @@
                             <td>{{ $student->student_number }}</td>
                             <td>{{ $student->first_name }}</td>
                             <td>{{ $student->last_name }}</td>
+                            <td>{{ $student->email }}</td>
                             <td>{{ $student->course }}</td>
                             <td>{{ $student->year_level }}</td>
                             
