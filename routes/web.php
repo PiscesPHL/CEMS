@@ -4,6 +4,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentController;   
+use App\Http\Controllers\StudentEmailController; // <-- Added Email Controller
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,9 +56,12 @@ Route::middleware(['auth', 'can:manage-students'])->group(function () {
     Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
     Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
     
-    // --- NEW TRASH ROUTES FROM SLIDE ---
+    // Trash Routes
     Route::get('/students-trash', [StudentController::class, 'trashed'])->name('students.trashed');
     Route::patch('/students/{id}/restore', [StudentController::class, 'restore'])->name('students.restore');
     Route::delete('/students/{id}/force-delete', [StudentController::class, 'forceDelete'])->name('students.forceDelete');
     
+    // Send Email Route
+    Route::post('/students/{student}/send-email', [StudentEmailController::class, 'sendWelcome'])
+        ->name('students.send-email');
 });

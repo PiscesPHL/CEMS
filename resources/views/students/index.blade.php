@@ -50,7 +50,15 @@
                             
                             @can('manage-students')
                             <td class="d-flex gap-2">
+                                <form action="{{ route('students.send-email', $student->id) }}" method="POST">
+                                    @csrf   
+                                    <button type="submit" class="btn btn-info btn-sm text-white" onclick="return confirm('Send welcome email to {{ $student->first_name }}?')">
+                                        Email
+                                    </button>
+                                </form>
+
                                 <a href="{{ url('students', $student->id) }}/edit" class="btn btn-success btn-sm">Edit</a>
+                                
                                 <form action="{{ url('students', $student->id) }}" method="POST">
                                     @csrf   
                                     @method('DELETE')
