@@ -8,12 +8,11 @@
         </div>
         @endif
 
-        <!-- Much cleaner Blade check! -->
-        @if(auth()->user()->isAdmin())
+        @can('manage-students')
         <div class="d-flex justify-end mb-3">
             <a href="{{ url('students/create') }}" class="btn btn-outline-primary btn-sm">Add New Student</a>
         </div>
-        @endif
+        @endcan
 
         <div class="card mb-4">
             <div class="card-body p-0">
@@ -27,9 +26,9 @@
                             <th>Course</th>
                             <th>Year Level</th>
                             
-                            @if(auth()->user()->isAdmin())
+                            @can('manage-students')
                                 <th>Action</th>
-                            @endif
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -42,8 +41,7 @@
                             <td>{{ $student->course }}</td>
                             <td>{{ $student->year_level }}</td>
                             
-                            <!-- Cleaner check here too! -->
-                            @if(auth()->user()->isAdmin())
+                            @can('manage-students')
                             <td class="d-flex gap-2">
                                 <a href="{{ url('students', $student->id) }}/edit" class="btn btn-success btn-sm">Edit</a>
                                 <form action="{{ url('students', $student->id) }}" method="POST">
@@ -52,7 +50,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
                                 </form>
                             </td>
-                            @endif
+                            @endcan
                             
                         </tr>
                         @endforeach

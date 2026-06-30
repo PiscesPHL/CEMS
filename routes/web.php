@@ -7,7 +7,9 @@ use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-// Public Route
+// -----------------------------------------------------
+// 1. Public Route
+// -----------------------------------------------------
 Route::get('/', function () {
     return view('welcome');
 });
@@ -15,6 +17,9 @@ Route::get('/', function () {
 // Authentication Routes
 Auth::routes();
 
+// -----------------------------------------------------
+// 2. Your Original Authenticated Routes
+// -----------------------------------------------------
 Route::get('/home', function () {
     return redirect()->route('dashboard');
 })->name('home');
@@ -27,11 +32,9 @@ Route::middleware(['auth:web'])->group(function () {
     Route::resource('organizations', OrganizationController::class);
 }); 
 
-// -----------------------------------------------------------------
-// Bootcamp Routes from your slide
-// -----------------------------------------------------------------
-
-// Group 1: General Authenticated Users (auth)
+// -----------------------------------------------------
+// 3. Bootcamp Routes: General Authenticated Users
+// -----------------------------------------------------
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -40,8 +43,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('students.index');
 });
 
-// Group 2: Admins Only (auth + role:admin)
-Route::middleware(['auth', 'role:admin'])->group(function () {
+// -----------------------------------------------------
+// 4. Bootcamp Routes: Authorized Users Only (Using Gate)
+// -----------------------------------------------------
+Route::middleware(['auth', 'can:manage-students'])->group(function () {
     Route::get('/students/create', [StudentController::class, 'create'])
         ->name('students.create');
         
@@ -56,4 +61,4 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         
     Route::delete('/students/{student}', [StudentController::class, 'destroy'])
         ->name('students.destroy');
-}); 
+});
