@@ -5,19 +5,23 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth; // <-- Added Auth facade import
+use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        // Changed auth() helper to Auth:: facade
-        if (! Auth::check() || Auth::user()->role !== $role) {
+        // 1. Check if the user is logged in
+        if (! Auth::check()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // 2. Convert both the user's role and the required role to lowercase to compare them
+        $userRole = strtolower(Auth::user()->role);
+        $requiredRole = strtolower($role);
+
+        // 3. Check if they match
+        if ($userRole !== $requiredRole) {
             abort(403, 'Unauthorized access.');
         }
 

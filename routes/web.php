@@ -3,23 +3,20 @@
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\DashboardController; // <-- Added from Bootcamp
-use App\Http\Controllers\StudentController;   // <-- Added from Bootcamp
+use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\StudentController;   
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-// -----------------------------------------------------
-// 1. Public Routes
-// -----------------------------------------------------
+// Public Route
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Authentication Routes
 Auth::routes();
 
-// -----------------------------------------------------
-// 2. Your Original Authenticated Routes
-// -----------------------------------------------------
+// Your Original Authenticated Routes
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth:web'])->group(function () {
@@ -30,9 +27,11 @@ Route::middleware(['auth:web'])->group(function () {
     Route::resource('organizations', OrganizationController::class);
 }); 
 
-// -----------------------------------------------------
-// 3. Bootcamp Routes: General Authenticated Users
-// -----------------------------------------------------
+// -----------------------------------------------------------------
+// Bootcamp Routes from your slide
+// -----------------------------------------------------------------
+
+// Group 1: General Authenticated Users (auth)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -41,9 +40,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('students.index');
 });
 
-// -----------------------------------------------------
-// 4. Bootcamp Routes: Admins Only
-// -----------------------------------------------------
+// Group 2: Admins Only (auth + role:admin)
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/students/create', [StudentController::class, 'create'])
         ->name('students.create');
