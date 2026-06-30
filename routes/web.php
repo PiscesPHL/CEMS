@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController; 
 use App\Http\Controllers\StudentController;   
 use Illuminate\Support\Facades\Route;
@@ -16,8 +15,9 @@ Route::get('/', function () {
 // Authentication Routes
 Auth::routes();
 
-// Your Original Authenticated Routes
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return redirect()->route('dashboard');
+})->name('home');
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('users-account/{id}/edit', [UserController::class, 'editAccount']);
@@ -56,4 +56,4 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         
     Route::delete('/students/{student}', [StudentController::class, 'destroy'])
         ->name('students.destroy');
-});
+}); 
