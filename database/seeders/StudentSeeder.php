@@ -1,8 +1,9 @@
 <?php
-
+// database/seeders/StudentSeeder.php
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Student;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents; <-- You can delete this line
 use Illuminate\Database\Seeder;
 
 class StudentSeeder extends Seeder
@@ -12,6 +13,7 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // Instructs the factory to generate 50 student records and insert them into the database
+        Student::factory(50)->create();
     }
 }
