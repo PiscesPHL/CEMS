@@ -5,20 +5,38 @@ namespace App\Mail;
 use App\Models\Student;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class StudentWelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Student $student) 
-    {
-        //
+    public function __construct(
+        public Student $student
+    ) {
     }
 
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->subject('Welcome to the Student Record System')
-                    ->view('emails.students.welcome');
+        return new Envelope(
+            subject: 'Welcome to the Student Record System',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'emails.students.welcome',
+            with: [
+                'student' => $this->student,
+            ],
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [];
     }
 }

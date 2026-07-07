@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
 use App\Jobs\SendStudentWelcomeEmail;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -14,10 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        // Fetch all students from the database
         $students = Student::all(); 
-        
-        // Pass the students to your index.blade.php view
         return view('students.index', compact('students'));
     }
 
@@ -34,25 +31,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validate the incoming data
         $validated = $request->validate([
-            'student_number' => 'required|unique:students,student_number',
-            'email' => 'required|email|unique:students,email',
+            'student_number' => 'required|unique:students',
+            'email' => 'required|email|unique:students',
             'first_name' => 'required|min:2',
             'last_name' => 'required|min:2',
             'course' => 'required',
             'year_level' => 'required',
         ]);
 
-        // 2. Create the student
         $student = Student::create($validated);
-        
-        // 3. Dispatch the job to the queue (Email processed in background)
         SendStudentWelcomeEmail::dispatch($student);
-        
-        // 4. Return immediately to the browser
-        return redirect()->route('students.index')
-            ->with('success', 'Student added successfully! Email is sending in the background.');
+
+        return redirect('/students')->with('success', 'Student saved. Email queued.');
     }
 
     /**
@@ -60,7 +51,6 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        // The $student is automatically fetched by Laravel based on the URL ID
         return view('students.edit', compact('student'));
     }
 
@@ -96,13 +86,13 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        // Delete the record
         $student->delete();
-
-        // Redirect back to the table with a success message
         return redirect('students')->with('success', 'Student deleted successfully.');
     }
 
+    /**
+     * Display a list of soft-deleted students.
+     */
     public function trashed(Request $request)
     {
         $search = $request->search;
@@ -119,15 +109,14 @@ class StudentController extends Controller
         return view('students.trashed', compact('students', 'search'));
     }
 
+    /**
+     * Restore a soft-deleted student.
+     */
     public function restore(int $id)
     {
-        // Find the deleted record using onlyTrashed()
         $student = Student::onlyTrashed()->findOrFail($id);
-
-        // Restore the record
         $student->restore();
 
-        // Redirect back to the trash page with a success message
         return redirect()
             ->route('students.trashed')
             ->with('success', 'Student restored successfully.');
@@ -138,10 +127,7 @@ class StudentController extends Controller
      */
     public function forceDelete(int $id)
     {
-        // Find the student in the trash
         $student = Student::withTrashed()->findOrFail($id);
-        
-        // Permanently erase them
         $student->forceDelete();
 
         return redirect()

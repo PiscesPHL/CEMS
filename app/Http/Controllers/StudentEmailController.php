@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\StudentWelcomeMail;
 use App\Models\Student;
 use Illuminate\Support\Facades\Mail;
-// Remove the 'use Illuminate\Http\Request;' line from here!
 
 class StudentEmailController extends Controller
 {
     /**
-     * Send a welcome email to the specific student.
+     * Send the welcome email to the given student.
      */
     public function sendWelcome(Student $student)
     {
