@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Jobs\SendStudentWelcomeEmail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -33,6 +34,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. Validate the incoming data
         $validated = $request->validate([
             'student_number' => 'required|unique:students,student_number',
             'email' => 'required|email|unique:students,email',
@@ -42,10 +44,15 @@ class StudentController extends Controller
             'year_level' => 'required',
         ]);
 
-        Student::create($validated);
-
+        // 2. Create the student
+        $student = Student::create($validated);
+        
+        // 3. Dispatch the job to the queue (Email processed in background)
+        SendStudentWelcomeEmail::dispatch($student);
+        
+        // 4. Return immediately to the browser
         return redirect()->route('students.index')
-            ->with('success', 'Student added successfully.');
+            ->with('success', 'Student added successfully! Email is sending in the background.');
     }
 
     /**
@@ -112,7 +119,7 @@ class StudentController extends Controller
         return view('students.trashed', compact('students', 'search'));
     }
 
-    public function restore(int $id) // <-- Added 'int' here
+    public function restore(int $id)
     {
         // Find the deleted record using onlyTrashed()
         $student = Student::onlyTrashed()->findOrFail($id);
@@ -129,7 +136,7 @@ class StudentController extends Controller
     /**
      * Permanently delete a student from the database.
      */
-    public function forceDelete(int $id) // <-- Added 'int' here
+    public function forceDelete(int $id)
     {
         // Find the student in the trash
         $student = Student::withTrashed()->findOrFail($id);
